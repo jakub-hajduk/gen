@@ -48,6 +48,9 @@ importers:
       oxlint:
         specifier: ^1.88.0
         version: 1.88.0
+      sure:
+        specifier: ^0.0.3
+        version: 0.0.3
       tsdown:
         specifier: ^0.23.1
         version: 0.23.1(tsx@4.23.15)(typescript@5.9.3)
@@ -791,9 +794,15 @@ packages:
     resolution: {integrity: sha512-AC/7JofJvZGrrneWNaEnJeOLUx+JlGt7tNa0wZiRPT4MY1wmfKjt2+6O2p2uz2+skll8OZZmJMNqeke7kKbNgQ==}
     hasBin: true
 
+  minimist@1.2.8:
+    resolution: {integrity: sha512-2yyAR8qBkN3YuheJanUpWC5U3bb5osDywNB8RzDVlDwDHbocAJveqqj1u8+SVD7jkWT4yvsHCpWqqWqAxb0zCA==}
+
   mri@1.2.0:
     resolution: {integrity: sha512-tzzskb3bG8LvYGFF/mDTpq3jpI6Q9wc3LEmBaghu+DdCssd1FakN7Bc0hVNmEyGq1bq3RgfkCb3cmQLpNPOroA==}
     engines: {node: '>=4'}
+
+  mute-stream@0.0.8:
+    resolution: {integrity: sha512-nnbWWOkoWyUsTjKrhgD0dcz22mdkSnpYqbEjIm2nhwhuxlSkpywJmBo8h0ZqJdkp73mb90SssHkN4rsRaBAfAA==}
 
   node-fetch-native@1.6.7:
     resolution: {integrity: sha512-g9yhqoedzIUm0nTnTqAQvueMPVOuIY16bqgAJJC8XOOubYFNwz6IER9qs0Gq2Xd0+CecCKFjtdDTMA4u4xG06Q==}
@@ -860,6 +869,10 @@ packages:
   rc9@3.1.0:
     resolution: {integrity: sha512-ufjkNVzbRHKcCOmTahZkmVsyc3W+MSk3jY03m+a7tGHkIsdVMG9l10/3HvFbWkkKzY5VFp3pkRsIo/UYgmFL7Q==}
 
+  read@1.0.7:
+    resolution: {integrity: sha512-rSOKNYUmaxy0om1BNjMN4ezNT6VKK+2xF4GBhc81mkH7L60i6dp8qPYrkndNLT3QPphoII3maL9PVC9XmhHwVQ==}
+    engines: {node: '>=0.8'}
+
   readdirp@5.1.1:
     resolution: {integrity: sha512-Kko+Y5XQ6fM+Ce3dq3m9YGxnacYZYl9cA1wZjaF3Vbry2L3i1qVg8+CAgNPsXRArPMUMCaOR7oa9Nqntc43JKA==}
     engines: {node: '>= 20.19.0'}
@@ -911,6 +924,10 @@ packages:
 
   std-env@3.10.0:
     resolution: {integrity: sha512-5GS12FdOZNliM5mAOxFRg7Ir0pWz8MdpYm6AY6VPkGpbA7ZzmbzNcBJQ0GPvvyWgcY7QAhCgf9Uy89I03faLkg==}
+
+  sure@0.0.3:
+    resolution: {integrity: sha512-/doQbAc7eHzMNEW818vwa1k+hmxIGv2C/6z85Y23hrawdCEHJTvHsT4QtejH6mprFD+KlrdgGRsTWCveKRIu5A==}
+    hasBin: true
 
   tinyexec@1.3.1:
     resolution: {integrity: sha512-GCvB3aoys96IuDFBMcTB46JOR6mdMtAToqwiW8JlWhsoh1mhHi/xn9ss/Dg7N555GiJyEt2qzoG/NHCwM6h1EA==}
@@ -1457,7 +1474,11 @@ snapshots:
 
   jiti@2.7.0: {}
 
+  minimist@1.2.8: {}
+
   mri@1.2.0: {}
+
+  mute-stream@0.0.8: {}
 
   node-fetch-native@1.6.7: {}
 
@@ -1543,6 +1564,10 @@ snapshots:
       defu: 6.1.7
       destr: 2.0.5
 
+  read@1.0.7:
+    dependencies:
+      mute-stream: 0.0.8
+
   readdirp@5.1.1: {}
 
   resolve-pkg-maps@1.0.0: {}
@@ -1591,6 +1616,11 @@ snapshots:
   sisteransi@1.0.5: {}
 
   std-env@3.10.0: {}
+
+  sure@0.0.3:
+    dependencies:
+      minimist: 1.2.8
+      read: 1.0.7
 
   tinyexec@1.3.1: {}
 
