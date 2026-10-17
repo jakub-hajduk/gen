@@ -8,11 +8,11 @@ write files without spawning a subprocess.
 The package splits that surface by cost. Each entry point pulls in only what it
 needs.
 
-| Specifier | What it gives you | What it loads |
-| --- | --- | --- |
-| `snipkit` | The declaration helpers and every public type | No runtime engines |
+| Specifier         | What it gives you                                                | What it loads                 |
+| ----------------- | ---------------------------------------------------------------- | ----------------------------- |
+| `snipkit`         | The declaration helpers and every public type                    | No runtime engines            |
 | `snipkit/runtime` | The functions that load, resolve, prompt, run, render, and stage | No interactive-prompt library |
-| `snipkit/cli` | The `snipkit` binary | `@clack/prompts` |
+| `snipkit/cli`     | The `snipkit` binary                                             | `@clack/prompts`              |
 
 `snipkit/cli` is the executable entry. It exports nothing, so import it only to
 run the CLI.
@@ -174,14 +174,14 @@ input.
 `createRunHooks()` returns a `RunHookable` you can pass as `runGenerator({ hooks })`
 or into `commitRun`. The hook names and payloads are public.
 
-| Hook | Fires | Payload |
-| --- | --- | --- |
-| `config:resolve` | After the configuration loads | `configPath`, `configDir`, `config` |
-| `prompts:resolve` | After answers resolve | `generator`, `answers` |
-| `action:before` | Before each action | `action`, `index`, `context` |
-| `action:after` | After each action | `action`, `index`, `context` |
-| `write:before` | Before the commit | `context`, `files` |
-| `write:after` | After the commit | `context`, `files`, `written` |
+| Hook              | Fires                         | Payload                             |
+| ----------------- | ----------------------------- | ----------------------------------- |
+| `config:resolve`  | After the configuration loads | `configPath`, `configDir`, `config` |
+| `prompts:resolve` | After answers resolve         | `generator`, `answers`              |
+| `action:before`   | Before each action            | `action`, `index`, `context`        |
+| `action:after`    | After each action             | `action`, `index`, `context`        |
+| `write:before`    | Before the commit             | `context`, `files`                  |
+| `write:after`     | After the commit              | `context`, `files`, `written`       |
 
 Hooks run in series and can be async. A hook that throws aborts the run before any
 file is committed, which makes them a place to add validation or logging without

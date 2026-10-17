@@ -63,14 +63,14 @@ If the list matches the goal, drop `--dry-run` to write the files.
 
 ## Prompt-to-flag map
 
-| Prompt constructor | Flag shape |
-| --- | --- |
-| `text` | `--name "User Profile"` |
-| `password` | `--token "..."` |
-| `number` | `--count 3` |
-| `confirm` | `--enabled` or `--no-enabled` |
-| `select` | `--framework react` |
-| `multiselect` | `--tags ui --tags form` or `--tags ui,form` |
+| Prompt constructor | Flag shape                                  |
+| ------------------ | ------------------------------------------- |
+| `text`             | `--name "User Profile"`                     |
+| `password`         | `--token "..."`                             |
+| `number`           | `--count 3`                                 |
+| `confirm`          | `--enabled` or `--no-enabled`               |
+| `select`           | `--framework react`                         |
+| `multiselect`      | `--tags ui --tags form` or `--tags ui,form` |
 
 The flag is the kebab-case form of the prompt key: a prompt keyed `componentName`
 becomes `--component-name`. Check the generator file for the exact keys, defaults,
@@ -173,9 +173,9 @@ Available `it.format` formatters include `pascalCase`, `camelCase`, `kebabCase`,
 
 ## Action cheat sheet
 
-| Goal | Action |
-| --- | --- |
-| Copy a template tree into the project | `addTemplates({ from, to })` |
+| Goal                                        | Action                                              |
+| ------------------------------------------- | --------------------------------------------------- |
+| Copy a template tree into the project       | `addTemplates({ from, to })`                        |
 | Add or merge named imports in a source file | `updateImports({ file, from, members, typeOnly? })` |
 | Add or merge named exports in a source file | `updateExports({ file, from, members, typeOnly? })` |
 

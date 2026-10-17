@@ -29,13 +29,13 @@ export default defineGenerator({
 });
 ```
 
-| Field | Required | Meaning |
-| --- | --- | --- |
-| `name` | yes | The CLI command name. The file name never affects it. |
-| `description` | no | Shown in the generator selection list. |
-| `basePath` | yes | Non-empty static path. Every file the generator writes stays below it. Resolved from the directory that holds `snipkit.config.*`, not the process CWD. |
-| `prompts` | no | Map of input name to prompt definition. |
-| `actions` | yes | Ordered list of changes to stage. |
+| Field         | Required | Meaning                                                                                                                                                |
+| ------------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `name`        | yes      | The CLI command name. The file name never affects it.                                                                                                  |
+| `description` | no       | Shown in the generator selection list.                                                                                                                 |
+| `basePath`    | yes      | Non-empty static path. Every file the generator writes stays below it. Resolved from the directory that holds `snipkit.config.*`, not the process CWD. |
+| `prompts`     | no       | Map of input name to prompt definition.                                                                                                                |
+| `actions`     | yes      | Ordered list of changes to stage.                                                                                                                      |
 
 A module can export one generator, several named generators, an array, or an
 object with a `generators` array, and can mix those. Nested arrays flatten.
@@ -51,13 +51,13 @@ is the kebab-case form of the prompt key, so `componentName` becomes
 `--component-name`. A supplied flag value is parsed and validated by the same
 prompt contract and skips the interaction.
 
-| Constructor | Value | CLI flag |
-| --- | --- | --- |
-| `text` | string | `--name <value>` |
-| `password` | string | `--token <value>` |
-| `number` | number | `--count <value>` |
-| `confirm` | boolean | `--enabled` / `--no-enabled` |
-| `select` | string | `--framework <value>` |
+| Constructor   | Value    | CLI flag                            |
+| ------------- | -------- | ----------------------------------- |
+| `text`        | string   | `--name <value>`                    |
+| `password`    | string   | `--token <value>`                   |
+| `number`      | number   | `--count <value>`                   |
+| `confirm`     | boolean  | `--enabled` / `--no-enabled`        |
+| `select`      | string   | `--framework <value>`               |
 | `multiselect` | string[] | `--tags a --tags b` or `--tags a,b` |
 
 ```ts
@@ -76,14 +76,14 @@ prompts: {
 
 Common options on every constructor:
 
-| Option | Purpose |
-| --- | --- |
-| `message` | Required prompt text. |
-| `description` | Extra context shown with the prompt. |
-| `alias` | Short flag, for example `alias: 'n'` gives `-n`. |
-| `default` | Value used interactively as a suggestion and non-interactively when the flag is missing. |
-| `validate` | Returns `true` or an error string. Runs on every path, including supplied flags. |
-| `format` | Transforms the final value before it lands in `answers`. |
+| Option        | Purpose                                                                                  |
+| ------------- | ---------------------------------------------------------------------------------------- |
+| `message`     | Required prompt text.                                                                    |
+| `description` | Extra context shown with the prompt.                                                     |
+| `alias`       | Short flag, for example `alias: 'n'` gives `-n`.                                         |
+| `default`     | Value used interactively as a suggestion and non-interactively when the flag is missing. |
+| `validate`    | Returns `true` or an error string. Runs on every path, including supplied flags.         |
+| `format`      | Transforms the final value before it lands in `answers`.                                 |
 
 Type-specific fields: `text` takes `placeholder`; `number` and `multiselect` take
 `min` and `max`; `select` and `multiselect` take `options`, where an option is a
@@ -109,7 +109,7 @@ copied verbatim.
 addTemplates({
   from: 'templates/component',
   to: 'components/<%= it.format.kebabCase(it.answers.name) %>',
-})
+});
 ```
 
 ### `updateImports({ file, from, members, typeOnly? })`
@@ -125,7 +125,7 @@ updateImports({
   file: 'components/index.ts',
   from: './<%= it.format.kebabCase(it.answers.name) %>',
   members: ['<%= it.format.pascalCase(it.answers.name) %>'],
-})
+});
 ```
 
 Set `typeOnly: true` to emit an `import type` declaration.

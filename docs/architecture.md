@@ -13,11 +13,11 @@ the prompt contract, staged writes, source updates, and the libraries underneath
 The package exposes three specifiers. They are split so a project pays only for
 what it loads.
 
-| Specifier | What it gives you | What it loads |
-| --- | --- | --- |
-| `snipkit` | Declaration helpers and every public type | No runtime engines |
+| Specifier         | What it gives you                                            | What it loads                 |
+| ----------------- | ------------------------------------------------------------ | ----------------------------- |
+| `snipkit`         | Declaration helpers and every public type                    | No runtime engines            |
 | `snipkit/runtime` | Functions that load, resolve, prompt, run, render, and stage | No interactive-prompt library |
-| `snipkit/cli` | The `snipkit` binary | `@clack/prompts` |
+| `snipkit/cli`     | The `snipkit` binary                                         | `@clack/prompts`              |
 
 `defineConfig` and `defineGenerator` are typed identity helpers. `defineGenerator`
 stamps the generator with `Symbol.for('snipkit.generator')`, which discovery uses
@@ -136,13 +136,13 @@ The same object drives two things:
 `argumentSpecFor` turns the prompt map into a `node:util` `parseArgs` spec. The
 mapping by type:
 
-| Prompt type | Value | Flag shape |
-| --- | --- | --- |
-| `text` | string | `--name <value>` |
-| `password` | string | `--token <value>` |
-| `number` | number | `--count <value>` |
-| `confirm` | boolean | `--enabled` / `--no-enabled` |
-| `select` | string | `--framework <value>` |
+| Prompt type   | Value    | Flag shape                                     |
+| ------------- | -------- | ---------------------------------------------- |
+| `text`        | string   | `--name <value>`                               |
+| `password`    | string   | `--token <value>`                              |
+| `number`      | number   | `--count <value>`                              |
+| `confirm`     | boolean  | `--enabled` / `--no-enabled`                   |
+| `select`      | string   | `--framework <value>`                          |
 | `multiselect` | string[] | `--tags a --tags b`, also accepts `--tags a,b` |
 
 A prompt may set `alias` to add a short flag. Two namespaces are reserved, and a
@@ -311,14 +311,14 @@ The runtime exposes typed, awaitable lifecycle points built on Hookable
 (`src/runtime/hooks.ts`). Calls run serially, and a hook error rejects the run
 before commit.
 
-| Hook | Fires | Payload |
-| --- | --- | --- |
-| `config:resolve` | After the config loads | `configPath`, `configDir`, `config` |
-| `prompts:resolve` | After answers resolve | `generator`, `answers` |
-| `action:before` | Before each action | `action`, `index`, `context` |
-| `action:after` | After each action | `action`, `index`, `context` |
-| `write:before` | Before the commit | `context`, `files` |
-| `write:after` | After the commit | `context`, `files`, `written` |
+| Hook              | Fires                  | Payload                             |
+| ----------------- | ---------------------- | ----------------------------------- |
+| `config:resolve`  | After the config loads | `configPath`, `configDir`, `config` |
+| `prompts:resolve` | After answers resolve  | `generator`, `answers`              |
+| `action:before`   | Before each action     | `action`, `index`, `context`        |
+| `action:after`    | After each action      | `action`, `index`, `context`        |
+| `write:before`    | Before the commit      | `context`, `files`                  |
+| `write:after`     | After the commit       | `context`, `files`, `written`       |
 
 `runActions` (`src/runtime/actions.ts`) calls `action:before`, looks up the
 handler by action type, runs it, then calls `action:after`. An unknown action type
@@ -331,17 +331,17 @@ layer can be added later without redesigning the runtime.
 
 ## Libraries under the hood
 
-| Library | Used for | Why it is used |
-| --- | --- | --- |
-| `c12` | Loading the located `snipkit.config.*` | Loads the file, including TypeScript through `jiti`, after discovery finds it. |
-| `jiti` | Importing generator modules | Runs TypeScript generator modules without a build step. One shared instance keeps object identity stable across imports. |
-| `tinyglobby` | Expanding `generators` glob patterns | Smaller than `fast-glob` and more ergonomic than the experimental `fs.glob`. |
-| `eta` | Rendering config strings and `.eta` contents | Standard delimiters, so template authors use familiar syntax. |
-| `change-case` | `it.format` formatters and filename placeholders | One formatter set shared by filenames and contents. The brand is a fixed allow-list. |
-| `@clack/prompts` | Interactive terminal prompts | Only loaded by `snipkit/cli`, so non-interactive consumers skip it. |
-| `writepool` | Staging every write before commit | Enables dry runs, collision checks, and all-or-nothing commits. |
-| `hookable` | Lifecycle hook registry | Typed, awaitable, serial hooks. |
-| `typescript` | Parsing sources for the import/export editors | AST positions let the editors change only the target declaration and preserve formatting. |
+| Library          | Used for                                         | Why it is used                                                                                                           |
+| ---------------- | ------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------ |
+| `c12`            | Loading the located `snipkit.config.*`           | Loads the file, including TypeScript through `jiti`, after discovery finds it.                                           |
+| `jiti`           | Importing generator modules                      | Runs TypeScript generator modules without a build step. One shared instance keeps object identity stable across imports. |
+| `tinyglobby`     | Expanding `generators` glob patterns             | Smaller than `fast-glob` and more ergonomic than the experimental `fs.glob`.                                             |
+| `eta`            | Rendering config strings and `.eta` contents     | Standard delimiters, so template authors use familiar syntax.                                                            |
+| `change-case`    | `it.format` formatters and filename placeholders | One formatter set shared by filenames and contents. The brand is a fixed allow-list.                                     |
+| `@clack/prompts` | Interactive terminal prompts                     | Only loaded by `snipkit/cli`, so non-interactive consumers skip it.                                                      |
+| `writepool`      | Staging every write before commit                | Enables dry runs, collision checks, and all-or-nothing commits.                                                          |
+| `hookable`       | Lifecycle hook registry                          | Typed, awaitable, serial hooks.                                                                                          |
+| `typescript`     | Parsing sources for the import/export editors    | AST positions let the editors change only the target declaration and preserve formatting.                                |
 
 Two design choices are worth calling out. Discovery detects generators by a brand
 symbol rather than duck-typing, so a config-shaped object cannot be mistaken for a
