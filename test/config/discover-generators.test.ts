@@ -11,7 +11,7 @@ const repoRoot = fileURLToPath(new URL('../../', import.meta.url));
 const srcEntry = join(repoRoot, 'src', 'index.ts');
 
 function tempDir(): string {
-  return realpathSync(mkdtempSync(join(tmpdir(), 'snipkit-discover-')));
+  return realpathSync(mkdtempSync(join(tmpdir(), 'snipo-discover-')));
 }
 
 function writeModule(dir: string, relativePath: string, body: string): string {

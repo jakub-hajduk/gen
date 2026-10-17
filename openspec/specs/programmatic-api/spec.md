@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Lets another library or tool embed Snipkit's generator engine — loading
+Lets another library or tool embed Snipo's generator engine — loading
 configuration, resolving prompts and generators, and running generators — through
 a typed public API split by dependency cost, instead of shelling out to the CLI.
 
@@ -46,7 +46,7 @@ and does not import the interactive-prompt adapter used by the CLI entry.
 
 The runtime SHALL run a caller-provided generator given an explicit answers map,
 a configuration directory, and a module directory, staging and committing output
-without requiring a `snipkit.config.*` file to exist.
+without requiring a `snipo.config.*` file to exist.
 
 #### Scenario: Code-defined generator runs without configuration
 
@@ -142,3 +142,17 @@ compose the behavior of the built-in actions.
 - **WHEN** a caller invokes the built-in handler for a template, import, or
   export action with a run context
 - **THEN** the handler stages the corresponding output in that context
+
+### Requirement: Package and export identity
+
+The package SHALL be published and imported as `snipo`, SHALL expose the `snipo/runtime` and `snipo/cli` entry points, and SHALL export its public identifiers under the `Snipo` prefix, including `SnipoConfig`, `SnipoActions`, and `loadSnipoConfig`.
+
+#### Scenario: Package root import
+
+- **WHEN** a consumer imports the declaration helpers or public types to declare or augment a generator
+- **THEN** the import resolves from the `snipo` package root
+
+#### Scenario: Runtime and CLI entry imports
+
+- **WHEN** a consumer imports the runtime entry to run a generator or the CLI entry to reach interactive behavior
+- **THEN** the import resolves from `snipo/runtime` or `snipo/cli` respectively

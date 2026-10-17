@@ -27,10 +27,10 @@ function writeGenerator(dir: string, name: string): void {
 }
 
 function makeProject(): string {
-  const dir = realpathSync(mkdtempSync(join(tmpdir(), 'snipkit-fixture-')));
+  const dir = realpathSync(mkdtempSync(join(tmpdir(), 'snipo-fixture-')));
   writeFile(join(dir, 'package.json'), JSON.stringify({ name: 'fixture', version: '0.0.0' }));
   writeFile(
-    join(dir, 'snipkit.config.ts'),
+    join(dir, 'snipo.config.ts'),
     "export default { generators: ['./generators/*.ts'] };\n",
   );
   writeGenerator(dir, 'alpha');

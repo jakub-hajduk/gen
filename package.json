@@ -1,5 +1,5 @@
 {
-  "name": "snipkit",
+  "name": "snipo",
   "version": "0.0.1",
   "description": "A modular toolkit for snippet-based code generation. Build and customize your own scaffolding system.",
   "keywords": [
@@ -16,10 +16,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/jakub-hajduk/snipkit"
+    "url": "https://github.com/jakub-hajduk/snipo"
   },
   "bin": {
-    "snipkit": "./dist/cli.mjs"
+    "snipo": "./dist/cli.mjs"
   },
   "files": [
     "dist"

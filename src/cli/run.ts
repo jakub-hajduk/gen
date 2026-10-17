@@ -1,7 +1,7 @@
 import { existsSync, readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { loadSnipkitConfig } from '../config/load-config';
+import { loadSnipoConfig } from '../config/load-config';
 import type { ActionHandlerRegistry } from '../runtime/actions';
 import { createRunHooks, type RunHookable } from '../runtime/hooks';
 import { resolveGenerator } from '../runtime/resolve-generator';
@@ -11,10 +11,10 @@ import { createClackAdapter } from './clack-adapter';
 import { parseGlobalFlags, parsePromptValues } from './parse-args';
 import type { PromptAdapter } from './prompt-adapter';
 
-const HELP = `snipkit - snippet-based code generation
+const HELP = `snipo - snippet-based code generation
 
 Usage:
-  snipkit <generator> [options]
+  snipo <generator> [options]
 
 Options:
   --dry-run        Report the files that would be written without writing them
@@ -37,7 +37,7 @@ function readVersion(): string {
           name?: string;
           version?: string;
         };
-        if (pkg.name === 'snipkit') return pkg.version ?? '0.0.0';
+        if (pkg.name === 'snipo') return pkg.version ?? '0.0.0';
       } catch {
         // ignore malformed package.json
       }
@@ -97,7 +97,7 @@ export async function runCli(argv: string[], options: RunCliOptions = {}): Promi
   const adapter = options.adapter ?? createClackAdapter();
   const hooks = options.hooks ?? createRunHooks();
 
-  const loaded = await loadSnipkitConfig(cwd);
+  const loaded = await loadSnipoConfig(cwd);
   await hooks.callHook('config:resolve', {
     configPath: loaded.configPath,
     configDir: loaded.configDir,

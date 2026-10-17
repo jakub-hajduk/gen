@@ -10,7 +10,7 @@ export type { CreateRunContextOptions, RunContext } from './runtime/context';
 
 export { commitRun } from './runtime/commit';
 
-export { findNearestConfig, findProjectBoundary, loadSnipkitConfig } from './config/load-config';
+export { findNearestConfig, findProjectBoundary, loadSnipoConfig } from './config/load-config';
 export type { LoadedConfig } from './config/load-config';
 
 export { discoverGenerators, resolveGeneratorModules } from './config/discover-generators';

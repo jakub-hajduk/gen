@@ -1,6 +1,6 @@
 import { createHooks, type Hookable } from 'hookable';
 import type { Action } from '../actions/types';
-import type { SnipkitConfig } from '../config/define-config';
+import type { SnipoConfig } from '../config/define-config';
 import type { Generator } from '../config/define-generator';
 import type { RunContext } from './context';
 
@@ -8,7 +8,7 @@ export interface RunHooks {
   'config:resolve': (payload: {
     configPath: string;
     configDir: string;
-    config: SnipkitConfig;
+    config: SnipoConfig;
   }) => void | Promise<void>;
   'prompts:resolve': (payload: {
     generator: Generator;

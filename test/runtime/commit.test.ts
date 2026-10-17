@@ -9,7 +9,7 @@ import { createRunContext } from '../../src/runtime/context';
 import { createRunHooks } from '../../src/runtime/hooks';
 
 function tempDir(): string {
-  return mkdtempSync(join(tmpdir(), 'snipkit-'));
+  return mkdtempSync(join(tmpdir(), 'snipo-'));
 }
 
 test('commitRun writes staged files to disk', async () => {

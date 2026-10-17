@@ -25,15 +25,15 @@ export interface UpdateExportsAction {
  * add a new action shape to the {@link Action} union:
  *
  * ```ts
- * declare module 'snipkit' {
- *   interface SnipkitActions {
+ * declare module 'snipo' {
+ *   interface SnipoActions {
  *     'acme/manifest': { readonly type: 'acme/manifest'; value: string };
  *   }
  * }
  * ```
  */
-export interface SnipkitActions {}
+export interface SnipoActions {}
 
 export type BuiltinAction = AddTemplatesAction | UpdateImportsAction | UpdateExportsAction;
 
-export type Action = BuiltinAction | SnipkitActions[keyof SnipkitActions];
+export type Action = BuiltinAction | SnipoActions[keyof SnipoActions];

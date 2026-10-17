@@ -1,6 +1,6 @@
 # Architecture and how it works
 
-Snipkit turns a declarative configuration file into a command line tool. A
+Snipo turns a declarative configuration file into a command line tool. A
 project declares generators, each generator declares prompts and actions, and the
 CLI resolves both the same way whether a person answers prompts in a terminal or
 an agent passes the values as flags.
@@ -13,19 +13,19 @@ the prompt contract, staged writes, source updates, and the libraries underneath
 The package exposes three specifiers. They are split so a project pays only for
 what it loads.
 
-| Specifier         | What it gives you                                            | What it loads                 |
-| ----------------- | ------------------------------------------------------------ | ----------------------------- |
-| `snipkit`         | Declaration helpers and every public type                    | No runtime engines            |
-| `snipkit/runtime` | Functions that load, resolve, prompt, run, render, and stage | No interactive-prompt library |
-| `snipkit/cli`     | The `snipkit` binary                                         | `@clack/prompts`              |
+| Specifier       | What it gives you                                            | What it loads                 |
+| --------------- | ------------------------------------------------------------ | ----------------------------- |
+| `snipo`         | Declaration helpers and every public type                    | No runtime engines            |
+| `snipo/runtime` | Functions that load, resolve, prompt, run, render, and stage | No interactive-prompt library |
+| `snipo/cli`     | The `snipo` binary                                           | `@clack/prompts`              |
 
 `defineConfig` and `defineGenerator` are typed identity helpers. `defineGenerator`
-stamps the generator with `Symbol.for('snipkit.generator')`, which discovery uses
+stamps the generator with `Symbol.for('snipo.generator')`, which discovery uses
 to recognize it. Beyond the brand they add no runtime behavior, and they exist so
 TypeScript can infer prompt keys into the action context
 (`src/config/define-config.ts`, `src/config/define-generator.ts`).
 
-A project that only declares generators imports `snipkit` and stops there. The
+A project that only declares generators imports `snipo` and stops there. The
 runtime entry carries the engines and never imports the Clack adapter, so a
 non-interactive consumer loads no prompt library. The binary is `./dist/cli.mjs`
 (`package.json`). It imports `runCli`, maps a cancelled prompt to exit code `130`,
@@ -38,7 +38,7 @@ order and stops at the first error.
 
 1. Parse global flags and the generator name (`parseGlobalFlags`).
 2. Short-circuit `-h/--help` and `-v/--version`.
-3. Find and load the nearest `snipkit.config.*` (`loadSnipkitConfig`).
+3. Find and load the nearest `snipo.config.*` (`loadSnipoConfig`).
 4. Run the `config:resolve` hook.
 5. Resolve which generator to run (`resolveGenerator`).
 6. Collect prompt values from flags and prompts (`resolvePrompts`).
@@ -47,7 +47,7 @@ order and stops at the first error.
 9. Print a report of the written or planned files.
 
 The generator name is the first argument when it does not start with a dash
-(`src/cli/parse-args.ts:43`), so `snipkit component --name "User Profile"`
+(`src/cli/parse-args.ts:43`), so `snipo component --name "User Profile"`
 resolves the `component` generator. Global flags parse in non-strict mode, so
 unrelated flags pass through to the prompt parser.
 
@@ -65,7 +65,7 @@ exists, the invocation directory is the boundary.
 
 **Find the nearest config up to that boundary** (`findNearestConfig`). It walks
 from the invocation directory toward the boundary and checks each level for
-`snipkit.config` with these extensions in order: `.ts`, `.mts`, `.cts`, `.js`,
+`snipo.config` with these extensions in order: `.ts`, `.mts`, `.cts`, `.js`,
 `.mjs`, `.cjs`, `.json`, `.jsonc`, `.json5`, `.yaml`, `.yml`, `.toml`. The first
 match wins.
 
@@ -74,7 +74,7 @@ falls back to the workspace-root config. A config inside a package takes
 precedence over one at the workspace root, because the package is nearer. The
 search never leaves the boundary.
 
-`loadSnipkitConfig` hands the config directory to c12 with comments, dotenv,
+`loadSnipoConfig` hands the config directory to c12 with comments, dotenv,
 package.json, and rc-file sources disabled, and `configFileRequired: true`. It
 requires `generators` to be an array of glob patterns and rejects a non-string
 entry with an actionable error. A missing config names the starting directory and
@@ -333,12 +333,12 @@ layer can be added later without redesigning the runtime.
 
 | Library          | Used for                                         | Why it is used                                                                                                           |
 | ---------------- | ------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------ |
-| `c12`            | Loading the located `snipkit.config.*`           | Loads the file, including TypeScript through `jiti`, after discovery finds it.                                           |
+| `c12`            | Loading the located `snipo.config.*`             | Loads the file, including TypeScript through `jiti`, after discovery finds it.                                           |
 | `jiti`           | Importing generator modules                      | Runs TypeScript generator modules without a build step. One shared instance keeps object identity stable across imports. |
 | `tinyglobby`     | Expanding `generators` glob patterns             | Smaller than `fast-glob` and more ergonomic than the experimental `fs.glob`.                                             |
 | `eta`            | Rendering config strings and `.eta` contents     | Standard delimiters, so template authors use familiar syntax.                                                            |
 | `change-case`    | `it.format` formatters and filename placeholders | One formatter set shared by filenames and contents. The brand is a fixed allow-list.                                     |
-| `@clack/prompts` | Interactive terminal prompts                     | Only loaded by `snipkit/cli`, so non-interactive consumers skip it.                                                      |
+| `@clack/prompts` | Interactive terminal prompts                     | Only loaded by `snipo/cli`, so non-interactive consumers skip it.                                                        |
 | `writepool`      | Staging every write before commit                | Enables dry runs, collision checks, and all-or-nothing commits.                                                          |
 | `hookable`       | Lifecycle hook registry                          | Typed, awaitable, serial hooks.                                                                                          |
 | `typescript`     | Parsing sources for the import/export editors    | AST positions let the editors change only the target declaration and preserve formatting.                                |

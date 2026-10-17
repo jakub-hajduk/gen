@@ -17,7 +17,7 @@ export async function resolveGenerator(
   const { generators, name, prompts } = options;
 
   if (generators.length === 0) {
-    throw new Error('No generators are defined in the snipkit configuration.');
+    throw new Error('No generators are defined in the snipo configuration.');
   }
 
   if (name) {
@@ -32,7 +32,7 @@ export async function resolveGenerator(
 
   if (!prompts.interactive) {
     throw new Error(
-      `No generator selected. Available generators: ${listNames(generators)}. Run "snipkit <generator>" to choose one.`,
+      `No generator selected. Available generators: ${listNames(generators)}. Run "snipo <generator>" to choose one.`,
     );
   }
 

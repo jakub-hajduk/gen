@@ -5,25 +5,25 @@ terminal or from automation.
 
 ## 1. Install
 
-Snipkit is an ESM package that provides a `snipkit` binary.
+Snipo is an ESM package that provides a `snipo` binary.
 
 ```sh
-pnpm add -D snipkit
+pnpm add -D snipo
 ```
 
-`npm install -D snipkit` and `yarn add -D snipkit` work the same way. The binary
-is available as `snipkit` once installed. Run it through your package manager
-(`pnpm snipkit ...`) or `npx snipkit ...` and you do not need a global install.
+`npm install -D snipo` and `yarn add -D snipo` work the same way. The binary
+is available as `snipo` once installed. Run it through your package manager
+(`pnpm snipo ...`) or `npx snipo ...` and you do not need a global install.
 
-## 2. Point Snipkit at your generators
+## 2. Point Snipo at your generators
 
-Create `snipkit.config.ts` at your project root. `defineConfig` takes a
-`generators` array of glob patterns. Snipkit expands each pattern from the
+Create `snipo.config.ts` at your project root. `defineConfig` takes a
+`generators` array of glob patterns. Snipo expands each pattern from the
 directory that holds the config file, imports every matching module, and loads
 the generators it exports.
 
 ```ts
-import { defineConfig } from 'snipkit';
+import { defineConfig } from 'snipo';
 
 export default defineConfig({
   generators: ['./generators/*.generator.ts'],
@@ -33,7 +33,7 @@ export default defineConfig({
 Put a generator in a file the pattern matches:
 
 ```ts
-import { addTemplates, defineGenerator, text } from 'snipkit';
+import { addTemplates, defineGenerator, text } from 'snipo';
 
 export default defineGenerator({
   name: 'component',
@@ -53,18 +53,18 @@ export default defineGenerator({
 
 What each field does:
 
-- `name`: the command you type, so this generator runs as `snipkit component`.
+- `name`: the command you type, so this generator runs as `snipo component`.
   The file name never affects the command.
 - `description`: shown when the CLI asks which generator to run.
 - `basePath`: the folder every generated file is written under. It resolves
-  relative to the directory that holds `snipkit.config.ts`, not your current
+  relative to the directory that holds `snipo.config.ts`, not your current
   working directory, so output is identical from any subdirectory.
 - `prompts`: the inputs the generator collects. The key `name` becomes the
   `--name` flag and the prompt shown in a terminal.
 - `actions`: the ordered list of changes to make.
 
-Snipkit finds the nearest `snipkit.config.*` by walking up from where you run the
-command. `snipkit.config.ts` is the usual choice, but `.js`, `.mjs`, `.json`,
+Snipo finds the nearest `snipo.config.*` by walking up from where you run the
+command. `snipo.config.ts` is the usual choice, but `.js`, `.mjs`, `.json`,
 `.yaml`, and other extensions work too. In a monorepo the search stops at the
 workspace root, so a package with no local config inherits the root config.
 
@@ -104,7 +104,7 @@ Generators rarely only add files. To append an export to a barrel file, add an
 `updateExports` action after `addTemplates`:
 
 ```ts
-import { addTemplates, defineGenerator, text, updateExports } from 'snipkit';
+import { addTemplates, defineGenerator, text, updateExports } from 'snipo';
 
 export default defineGenerator({
   name: 'component',
@@ -138,10 +138,10 @@ Create the target file the action updates, `src/components/index.ts`:
 Supply every prompt value as a flag to run without prompts:
 
 ```sh
-pnpm snipkit component --name "User Profile"
+pnpm snipo component --name "User Profile"
 ```
 
-Snipkit writes `src/components/user-profile/UserProfile.tsx` and appends the
+Snipo writes `src/components/user-profile/UserProfile.tsx` and appends the
 export to `src/components/index.ts`, which now reads:
 
 ```ts
@@ -149,7 +149,7 @@ export to `src/components/index.ts`, which now reads:
 export { UserProfile } from './user-profile';
 ```
 
-Run `pnpm snipkit component` from a terminal instead and it prompts for the name.
+Run `pnpm snipo component` from a terminal instead and it prompts for the name.
 If you omit a required flag outside a terminal, the command fails and names the
 flag you need to pass.
 
@@ -158,7 +158,7 @@ flag you need to pass.
 Pass `--dry-run` to list the files a run would produce without touching disk:
 
 ```sh
-pnpm snipkit component --name "Billing" --dry-run
+pnpm snipo component --name "Billing" --dry-run
 ```
 
 If a generated path already exists, the run fails rather than overwriting it.

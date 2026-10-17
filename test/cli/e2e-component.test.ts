@@ -28,10 +28,10 @@ function buildFixture(): string {
   const entry = join(repoRoot, 'src', 'index.ts');
   const rewriteImport = (contents: string, from: string) => {
     const specifier = relative(from, entry);
-    return contents.replace(/from 'snipkit'/, `from ${JSON.stringify(specifier)}`);
+    return contents.replace(/from 'snipo'/, `from ${JSON.stringify(specifier)}`);
   };
 
-  writeFile(join(dir, 'snipkit.config.ts'), rewriteImport(extractExample('config'), dir));
+  writeFile(join(dir, 'snipo.config.ts'), rewriteImport(extractExample('config'), dir));
   writeFile(
     join(dir, 'generators', 'component.generator.ts'),
     rewriteImport(extractExample('generator'), join(dir, 'generators')),

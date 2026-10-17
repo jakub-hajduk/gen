@@ -8,7 +8,7 @@ import { runGenerator } from '../../src/runtime';
 import { makeTempDir, writeFile } from '../helpers/fixtures';
 
 function makeModuleDir(): string {
-  const moduleDir = makeTempDir('snipkit-module-');
+  const moduleDir = makeTempDir('snipo-module-');
   writeFile(
     join(moduleDir, 'templates', 'widget.ts.eta'),
     'export const <%= it.answers.name %> = true;\n',
@@ -16,11 +16,11 @@ function makeModuleDir(): string {
   return moduleDir;
 }
 
-test('a code-defined generator runs without a snipkit.config file', async () => {
-  const configDir = makeTempDir('snipkit-target-');
+test('a code-defined generator runs without a snipo.config file', async () => {
+  const configDir = makeTempDir('snipo-target-');
   const moduleDir = makeModuleDir();
 
-  assert.equal(existsSync(join(configDir, 'snipkit.config.ts')), false);
+  assert.equal(existsSync(join(configDir, 'snipo.config.ts')), false);
 
   const result = await runGenerator({
     generator: defineGenerator({
@@ -42,7 +42,7 @@ test('a code-defined generator runs without a snipkit.config file', async () => 
 });
 
 test('a dry run returns the staged list and writes nothing', async () => {
-  const configDir = makeTempDir('snipkit-target-');
+  const configDir = makeTempDir('snipo-target-');
   const moduleDir = makeModuleDir();
 
   const result = await runGenerator({

@@ -4,17 +4,17 @@ import { dirname, join, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { test } from 'node:test';
 
-import { loadSnipkitConfig, resolveGenerator, runGenerator } from '../../src/runtime';
+import { loadSnipoConfig, resolveGenerator, runGenerator } from '../../src/runtime';
 import { createFakeAdapter } from '../helpers/fake-adapter';
 import { makeTempDir, writeFile } from '../helpers/fixtures';
 
 const srcEntry = join(fileURLToPath(new URL('../../', import.meta.url)), 'src', 'index.ts');
 
 function makeProject(): string {
-  const dir = makeTempDir('snipkit-pipeline-');
+  const dir = makeTempDir('snipo-pipeline-');
   writeFile(join(dir, 'package.json'), JSON.stringify({ name: 'fixture', version: '0.0.0' }));
   writeFile(
-    join(dir, 'snipkit.config.ts'),
+    join(dir, 'snipo.config.ts'),
     "export default { generators: ['./generators/*.ts'] };\n",
   );
 
@@ -36,7 +36,7 @@ function makeProject(): string {
 test('load, resolve by name, and run through the public runtime exports', async () => {
   const dir = makeProject();
 
-  const loaded = await loadSnipkitConfig(dir);
+  const loaded = await loadSnipoConfig(dir);
   const resolved = await resolveGenerator({
     generators: loaded.generators,
     name: 'component',
@@ -59,7 +59,7 @@ test('load, resolve by name, and run through the public runtime exports', async 
 
 test('an unknown generator name fails and lists the available names', async () => {
   const dir = makeProject();
-  const loaded = await loadSnipkitConfig(dir);
+  const loaded = await loadSnipoConfig(dir);
 
   await assert.rejects(
     resolveGenerator({

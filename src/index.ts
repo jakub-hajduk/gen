@@ -1,5 +1,5 @@
 export { defineConfig } from './config/define-config';
-export type { SnipkitConfig } from './config/define-config';
+export type { SnipoConfig } from './config/define-config';
 export { defineGenerator } from './config/define-generator';
 export type { Generator } from './config/define-generator';
 
@@ -9,7 +9,7 @@ export type {
   AddTemplatesAction,
   AddTemplatesOptions,
   BuiltinAction,
-  SnipkitActions,
+  SnipoActions,
   UpdateExportsAction,
   UpdateExportsOptions,
   UpdateImportsAction,
