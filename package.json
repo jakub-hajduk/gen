@@ -1,0 +1,72 @@
+{
+  "name": "snipkit",
+  "version": "0.0.0",
+  "description": "A modular toolkit for snippet-based code generation. Build and customize your own scaffolding system.",
+  "keywords": [
+    "automation",
+    "code-gen",
+    "generator",
+    "scaffolding",
+    "snippet"
+  ],
+  "license": "ISC",
+  "author": {
+    "name": "Jakub Hajduk",
+    "email": "devhajduk@gmail.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jakub-hajduk/snipkit"
+  },
+  "bin": {
+    "snipkit": "./dist/cli.mjs"
+  },
+  "files": [
+    "dist"
+  ],
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.mts",
+      "import": "./dist/index.mjs"
+    },
+    "./runtime": {
+      "types": "./dist/runtime.d.mts",
+      "import": "./dist/runtime.mjs"
+    },
+    "./cli": {
+      "types": "./dist/cli.d.mts",
+      "import": "./dist/cli.mjs"
+    }
+  },
+  "scripts": {
+    "dev": "tsdown --watch",
+    "build": "tsdown",
+    "typecheck": "tsc --noEmit",
+    "test": "node --import tsx --test",
+    "lint": "oxlint",
+    "format": "oxfmt",
+    "check": "oxlint && oxfmt --check && tsc --noEmit",
+    "fix": "oxlint --fix && oxfmt --write",
+    "!!release": "pnpm run fix && pnpm run build && changelogen --release --push --publish"
+  },
+  "dependencies": {
+    "@clack/prompts": "^1.8.1",
+    "c12": "^3.3.4",
+    "change-case": "^5.4.4",
+    "eta": "^4.6.0",
+    "hookable": "^6.1.2",
+    "jiti": "^2.7.0",
+    "tinyglobby": "^0.2.17",
+    "typescript": "^5.7.3",
+    "writepool": "^0.0.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.4",
+    "changelogen": "^0.6.2",
+    "oxfmt": "^0.73.0",
+    "oxlint": "^1.88.0",
+    "tsdown": "^0.23.1",
+    "tsx": "^4.19.2"
+  }
+}
