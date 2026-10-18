@@ -5,13 +5,13 @@ import { dirname, join, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { test } from 'node:test';
 
-import { findProjectBoundary, loadSnipoConfig } from '../../src/config/load-config';
+import { findProjectBoundary, loadGenConfig } from '../../src/config/load-config';
 
 const repoRoot = fileURLToPath(new URL('../../', import.meta.url));
 const srcEntry = join(repoRoot, 'src', 'index.ts');
 
 function tempDir(): string {
-  return realpathSync(mkdtempSync(join(tmpdir(), 'snipo-config-')));
+  return realpathSync(mkdtempSync(join(tmpdir(), 'gen-config-')));
 }
 
 function write(path: string, contents: string): void {
@@ -34,15 +34,15 @@ test('configuration is inherited from a monorepo root', async () => {
 
   write(join(root, 'package.json'), JSON.stringify({ name: 'root', private: true }));
   write(join(root, 'pnpm-workspace.yaml'), 'packages:\n  - packages/*\n');
-  write(join(root, 'snipo.config.ts'), "export default { generators: ['./generators/*.ts'] };\n");
+  write(join(root, 'gen.config.ts'), "export default { generators: ['./generators/*.ts'] };\n");
   write(join(appDir, 'package.json'), JSON.stringify({ name: 'app' }));
   writeGenerator(root, 'generators/root.ts', 'root');
 
-  const loaded = await loadSnipoConfig(appDir);
+  const loaded = await loadGenConfig(appDir);
 
   assert.equal(loaded.configDir, root);
   assert.equal(loaded.boundary, root);
-  assert.equal(loaded.configPath, join(root, 'snipo.config.ts'));
+  assert.equal(loaded.configPath, join(root, 'gen.config.ts'));
   assert.equal(loaded.generators[0]?.generator.name, 'root');
   assert.equal(loaded.generators[0]?.moduleDir, join(root, 'generators'));
 });
@@ -53,13 +53,13 @@ test('a package configuration takes precedence over the workspace root', async (
 
   write(join(root, 'package.json'), JSON.stringify({ name: 'root', private: true }));
   write(join(root, 'pnpm-workspace.yaml'), 'packages:\n  - packages/*\n');
-  write(join(root, 'snipo.config.ts'), "export default { generators: ['./generators/*.ts'] };\n");
+  write(join(root, 'gen.config.ts'), "export default { generators: ['./generators/*.ts'] };\n");
   write(join(appDir, 'package.json'), JSON.stringify({ name: 'app' }));
-  write(join(appDir, 'snipo.config.ts'), "export default { generators: ['./generators/*.ts'] };\n");
+  write(join(appDir, 'gen.config.ts'), "export default { generators: ['./generators/*.ts'] };\n");
   writeGenerator(root, 'generators/root.ts', 'root');
   writeGenerator(appDir, 'generators/app.ts', 'app');
 
-  const loaded = await loadSnipoConfig(appDir);
+  const loaded = await loadGenConfig(appDir);
 
   assert.equal(loaded.configDir, appDir);
   assert.deepEqual(
@@ -80,9 +80,9 @@ test('a non-workspace project boundary is the nearest package.json', () => {
 test('a non-string generators entry is rejected with an actionable error', async () => {
   const root = tempDir();
   write(join(root, 'package.json'), JSON.stringify({ name: 'solo' }));
-  write(join(root, 'snipo.config.ts'), 'export default { generators: [{ name: "inline" }] };\n');
+  write(join(root, 'gen.config.ts'), 'export default { generators: [{ name: "inline" }] };\n');
 
-  await assert.rejects(loadSnipoConfig(root), /must be an array of glob patterns/);
+  await assert.rejects(loadGenConfig(root), /must be an array of glob patterns/);
 });
 
 test('a missing configuration produces an actionable error', async () => {
@@ -90,7 +90,7 @@ test('a missing configuration produces an actionable error', async () => {
   write(join(root, 'package.json'), JSON.stringify({ name: 'solo' }));
 
   await assert.rejects(
-    loadSnipoConfig(root),
-    /No snipo\.config\.\* found from .* up to the project boundary at .*/,
+    loadGenConfig(root),
+    /No gen\.config\.\* found from .* up to the project boundary at .*/,
   );
 });

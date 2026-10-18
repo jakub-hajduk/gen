@@ -11,7 +11,7 @@ For a guided walkthrough that ends in a running command, read
 ## The generator shape
 
 ```ts
-import { addTemplates, defineGenerator, text } from 'snipo';
+import { addTemplates, defineGenerator, text } from '@trut/gen';
 
 export default defineGenerator({
   name: 'component',
@@ -29,13 +29,13 @@ export default defineGenerator({
 });
 ```
 
-| Field         | Required | Meaning                                                                                                                                              |
-| ------------- | -------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `name`        | yes      | The CLI command name. The file name never affects it.                                                                                                |
-| `description` | no       | Shown in the generator selection list.                                                                                                               |
-| `basePath`    | yes      | Non-empty static path. Every file the generator writes stays below it. Resolved from the directory that holds `snipo.config.*`, not the process CWD. |
-| `prompts`     | no       | Map of input name to prompt definition.                                                                                                              |
-| `actions`     | yes      | Ordered list of changes to stage.                                                                                                                    |
+| Field         | Required | Meaning                                                                                                                                            |
+| ------------- | -------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `name`        | yes      | The CLI command name. The file name never affects it.                                                                                              |
+| `description` | no       | Shown in the generator selection list.                                                                                                             |
+| `basePath`    | yes      | Non-empty static path. Every file the generator writes stays below it. Resolved from the directory that holds `gen.config.*`, not the process CWD. |
+| `prompts`     | no       | Map of input name to prompt definition.                                                                                                            |
+| `actions`     | yes      | Ordered list of changes to stage.                                                                                                                  |
 
 A module can export one generator, several named generators, an array, or an
 object with a `generators` array, and can mix those. Nested arrays flatten.
@@ -197,17 +197,17 @@ export * from './<%= it.format.kebabCase(it.answers.name) %>';
 ## Extending the action set
 
 The action list is open. Declare a new action shape by augmenting the
-`SnipoActions` interface, then register a handler for its type. Custom handlers
+`GenActions` interface, then register a handler for its type. Custom handlers
 receive the same run context as the built-in ones, so they can read `answers`,
 read content staged earlier in the run, and stage output into the same commit.
 
 ```ts
 import { join } from 'node:path';
-import { addTemplates, defineGenerator, type ActionHandlerRegistry } from 'snipo';
-import { runGenerator, stageFile } from 'snipo/runtime';
+import { addTemplates, defineGenerator, type ActionHandlerRegistry } from '@trut/gen';
+import { runGenerator, stageFile } from '@trut/gen/runtime';
 
-declare module 'snipo' {
-  interface SnipoActions {
+declare module '@trut/gen' {
+  interface GenActions {
     'acme/manifest': { readonly type: 'acme/manifest'; value: string };
   }
 }

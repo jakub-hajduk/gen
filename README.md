@@ -1,4 +1,4 @@
-# snipo
+# Gen
 
 A modular toolkit for snippet-based code generation. Define generators once and
 run them interactively or from automation with the same inputs.
@@ -6,18 +6,18 @@ run them interactively or from automation with the same inputs.
 ## Install
 
 ```sh
-pnpm add -D snipo
+pnpm add -D @trut/gen
 ```
 
 ## Quick start
 
-Create `snipo.config.ts` at your project root. It points at the glob patterns
-Snipo uses to discover generator modules:
+Create `gen.config.ts` at your project root. It points at the glob patterns
+Gen uses to discover generator modules:
 
 <!-- example:config -->
 
 ```ts
-import { defineConfig } from 'snipo';
+import { defineConfig } from '@trut/gen';
 
 export default defineConfig({
   generators: ['./generators/*.generator.ts'],
@@ -30,7 +30,7 @@ generators, or an object with a `generators` array:
 <!-- example:generator -->
 
 ```ts
-import { addTemplates, defineGenerator, text, updateExports } from 'snipo';
+import { addTemplates, defineGenerator, text, updateExports } from '@trut/gen';
 
 export default defineGenerator({
   name: 'component',
@@ -85,7 +85,7 @@ Create the barrel that the generator updates, `src/components/index.ts`:
 Run the generator with every value supplied as a flag:
 
 ```sh
-pnpm snipo component --name "User Profile"
+pnpm gen component --name "User Profile"
 ```
 
 Because every prompt value is supplied, the command runs without prompting,
@@ -97,12 +97,12 @@ export to `src/components/index.ts`:
 export { UserProfile } from './user-profile';
 ```
 
-Run `pnpm snipo component` from a terminal instead to be prompted for the name.
+Run `pnpm gen component` from a terminal instead to be prompted for the name.
 
 ## Configuration
 
 `defineConfig` takes an object with a `generators` array of glob patterns.
-Snipo expands each pattern from the directory that contains `snipo.config.*`,
+Gen expands each pattern from the directory that contains `gen.config.*`,
 imports every matching module, and flattens its exports into a list of
 generators. A module may default-export one generator, an array of generators, or
 an object with a `generators` array, and may also name-export generators; nested
@@ -115,7 +115,7 @@ distinct generators that share a `name` fail the run.
 - `name` (required): the CLI command name. The file name never affects it.
 - `description` (optional): shown in the generator selection list.
 - `basePath` (required): a static path, resolved from the directory that
-  contains `snipo.config.*`. Every file a generator writes stays below it.
+  contains `gen.config.*`. Every file a generator writes stays below it.
 - `prompts` (optional): a map of input name to prompt definition.
 - `actions` (required): the ordered list of changes to stage.
 
@@ -173,17 +173,17 @@ declarations. Adding the same member twice is a no-op.
 ## Extending actions
 
 The action set is extensible. Declare a new action shape by augmenting the
-`SnipoActions` interface, then register a handler for its type. Custom handlers
+`GenActions` interface, then register a handler for its type. Custom handlers
 receive the same run context as the built-in ones, so they can read `answers`,
 read content staged earlier in the run, and stage output into the same commit.
 
 ```ts
 import { join } from 'node:path';
-import { addTemplates, defineGenerator, type ActionHandlerRegistry } from 'snipo';
-import { runGenerator, stageFile } from 'snipo/runtime';
+import { addTemplates, defineGenerator, type ActionHandlerRegistry } from '@trut/gen';
+import { runGenerator, stageFile } from '@trut/gen/runtime';
 
-declare module 'snipo' {
-  interface SnipoActions {
+declare module '@trut/gen' {
+  interface GenActions {
     'acme/manifest': { readonly type: 'acme/manifest'; value: string };
   }
 }
@@ -249,13 +249,13 @@ is written.
 
 ## Programmatic usage
 
-Import the engine from `snipo/runtime` to run generators from another tool.
-The root (`snipo`) stays free of runtime dependencies and exports the shared
+Import the engine from `@trut/gen/runtime` to run generators from another tool.
+The root (`@trut/gen`) stays free of runtime dependencies and exports the shared
 types, so a project that only declares generators loads no engine.
 
 ```ts
-import { addTemplates, defineGenerator, text, type PromptAdapter } from 'snipo';
-import { loadSnipoConfig, resolveGenerator, resolvePrompts, runGenerator } from 'snipo/runtime';
+import { addTemplates, defineGenerator, text, type PromptAdapter } from '@trut/gen';
+import { loadGenConfig, resolveGenerator, resolvePrompts, runGenerator } from '@trut/gen/runtime';
 
 const generator = defineGenerator({
   name: 'component',
@@ -264,7 +264,7 @@ const generator = defineGenerator({
   actions: [addTemplates({ from: 'templates/component', to: '.' })],
 });
 
-// Run a code-defined generator without a snipo.config.* file. `configDir`
+// Run a code-defined generator without a gen.config.* file. `configDir`
 // anchors `basePath`; `moduleDir` anchors template `from`.
 await runGenerator({
   generator,
@@ -275,7 +275,7 @@ await runGenerator({
 
 // Or drive the config-discovery pipeline yourself with a PromptAdapter.
 const adapter: PromptAdapter = createMyAdapter();
-const loaded = await loadSnipoConfig(process.cwd());
+const loaded = await loadGenConfig(process.cwd());
 const resolved = await resolveGenerator({
   generators: loaded.generators,
   name: 'component',
@@ -294,7 +294,7 @@ await runGenerator({
 });
 ```
 
-`snipo/runtime` also exposes the loader, resolver, hooks, staging and
+`@trut/gen/runtime` also exposes the loader, resolver, hooks, staging and
 rendering primitives, the built-in action handlers, and the AST editors
 (`editImports`/`editExports`). The CLI entry and its Clack adapter stay in
-`snipo/cli`, so a non-interactive consumer never loads the prompt library.
+`@trut/gen/cli`, so a non-interactive consumer never loads the prompt library.

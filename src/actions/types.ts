@@ -25,15 +25,15 @@ export interface UpdateExportsAction {
  * add a new action shape to the {@link Action} union:
  *
  * ```ts
- * declare module 'snipo' {
- *   interface SnipoActions {
+ * declare module '@trut/gen' {
+ *   interface GenActions {
  *     'acme/manifest': { readonly type: 'acme/manifest'; value: string };
  *   }
  * }
  * ```
  */
-export interface SnipoActions {}
+export interface GenActions {}
 
 export type BuiltinAction = AddTemplatesAction | UpdateImportsAction | UpdateExportsAction;
 
-export type Action = BuiltinAction | SnipoActions[keyof SnipoActions];
+export type Action = BuiltinAction | GenActions[keyof GenActions];

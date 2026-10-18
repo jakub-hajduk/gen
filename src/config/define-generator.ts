@@ -1,7 +1,7 @@
 import type { Action } from '../actions/types';
 import type { AnyPrompt } from '../prompts/types';
 
-export const GENERATOR_BRAND = Symbol.for('snipo.generator');
+export const GENERATOR_BRAND = Symbol.for('@trut/gen.generator');
 
 export interface Generator<TPrompts extends Record<string, AnyPrompt> = Record<string, AnyPrompt>> {
   name: string;

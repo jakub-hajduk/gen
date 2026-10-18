@@ -8,7 +8,7 @@ Provides a deterministic generator command line that works equally for interacti
 
 ### Requirement: Project configuration discovery
 
-The system SHALL load the nearest `snipo.config.*` found from the invocation directory up to and including the project boundary. The boundary SHALL be the workspace root for a monorepo, or the nearest ancestor with `package.json` for a non-workspace project. A missing configuration SHALL produce an actionable error without searching outside that boundary.
+The system SHALL load the nearest `gen.config.*` found from the invocation directory up to and including the project boundary. The boundary SHALL be the workspace root for a monorepo, or the nearest ancestor with `package.json` for a non-workspace project. A missing configuration SHALL produce an actionable error without searching outside that boundary.
 
 #### Scenario: Configuration inherited from a monorepo root
 
@@ -35,12 +35,12 @@ The system SHALL show an interactive generator selection when no generator name 
 
 #### Scenario: Interactive selection
 
-- **WHEN** a user runs `snipo` without a generator name from a TTY
+- **WHEN** a user runs `gen` without a generator name from a TTY
 - **THEN** the user can select one declared generator through the terminal interface
 
 #### Scenario: Non-interactive selection failure
 
-- **WHEN** automation runs `snipo` without a generator name
+- **WHEN** automation runs `gen` without a generator name
 - **THEN** the command exits with an error that identifies the available generators
 
 ### Requirement: Prompts and CLI flags share one definition
@@ -168,9 +168,9 @@ Two distinct generators that declare the same `name` SHALL fail the run.
 
 ### Requirement: CLI program identity
 
-The command-line program SHALL be invoked as `snipo`. Guidance and error messages that tell a user how to run or choose a generator SHALL name the `snipo` program.
+The command-line program SHALL be invoked as `gen`. Guidance and error messages that tell a user how to run or choose a generator SHALL name the `gen` program.
 
 #### Scenario: Guidance names the program
 
 - **WHEN** the command reports that no generator was selected and lists the available generators
-- **THEN** the message tells the user to run `snipo <generator>` to choose one
+- **THEN** the message tells the user to run `gen <generator>` to choose one

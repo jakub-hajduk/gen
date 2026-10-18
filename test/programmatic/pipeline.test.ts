@@ -4,19 +4,16 @@ import { dirname, join, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { test } from 'node:test';
 
-import { loadSnipoConfig, resolveGenerator, runGenerator } from '../../src/runtime';
+import { loadGenConfig, resolveGenerator, runGenerator } from '../../src/runtime';
 import { createFakeAdapter } from '../helpers/fake-adapter';
 import { makeTempDir, writeFile } from '../helpers/fixtures';
 
 const srcEntry = join(fileURLToPath(new URL('../../', import.meta.url)), 'src', 'index.ts');
 
 function makeProject(): string {
-  const dir = makeTempDir('snipo-pipeline-');
+  const dir = makeTempDir('gen-pipeline-');
   writeFile(join(dir, 'package.json'), JSON.stringify({ name: 'fixture', version: '0.0.0' }));
-  writeFile(
-    join(dir, 'snipo.config.ts'),
-    "export default { generators: ['./generators/*.ts'] };\n",
-  );
+  writeFile(join(dir, 'gen.config.ts'), "export default { generators: ['./generators/*.ts'] };\n");
 
   const modulePath = join(dir, 'generators', 'component.ts');
   const specifier = relative(dirname(modulePath), srcEntry);
@@ -36,7 +33,7 @@ function makeProject(): string {
 test('load, resolve by name, and run through the public runtime exports', async () => {
   const dir = makeProject();
 
-  const loaded = await loadSnipoConfig(dir);
+  const loaded = await loadGenConfig(dir);
   const resolved = await resolveGenerator({
     generators: loaded.generators,
     name: 'component',
@@ -59,7 +56,7 @@ test('load, resolve by name, and run through the public runtime exports', async 
 
 test('an unknown generator name fails and lists the available names', async () => {
   const dir = makeProject();
-  const loaded = await loadSnipoConfig(dir);
+  const loaded = await loadGenConfig(dir);
 
   await assert.rejects(
     resolveGenerator({

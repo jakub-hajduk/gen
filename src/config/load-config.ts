@@ -1,10 +1,10 @@
 import { existsSync, readFileSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { loadConfig } from 'c12';
-import type { SnipoConfig } from './define-config';
+import type { GenConfig } from './define-config';
 import { discoverGenerators, type DiscoveredGenerator } from './discover-generators';
 
-const CONFIG_BASENAME = 'snipo.config';
+const CONFIG_BASENAME = 'gen.config';
 const CONFIG_EXTENSIONS = [
   '.ts',
   '.mts',
@@ -23,7 +23,7 @@ const CONFIG_EXTENSIONS = [
 const WORKSPACE_MARKERS = ['pnpm-workspace.yaml', 'pnpm-workspace.yml', 'lerna.json', 'rush.json'];
 
 export interface LoadedConfig {
-  config: SnipoConfig;
+  config: GenConfig;
   generators: DiscoveredGenerator[];
   configPath: string;
   configDir: string;
@@ -32,7 +32,7 @@ export interface LoadedConfig {
 
 function declarationError(configPath: string): Error {
   return new Error(
-    `Invalid snipo configuration at ${configPath}: expected a default export whose "generators" is an array of glob patterns (strings).`,
+    `Invalid gen configuration at ${configPath}: expected a default export whose "generators" is an array of glob patterns (strings).`,
   );
 }
 
@@ -104,7 +104,7 @@ export function findNearestConfig(
   return undefined;
 }
 
-export async function loadSnipoConfig(cwd: string = process.cwd()): Promise<LoadedConfig> {
+export async function loadGenConfig(cwd: string = process.cwd()): Promise<LoadedConfig> {
   const boundary = findProjectBoundary(cwd);
   const configPath = findNearestConfig(cwd, boundary);
 
@@ -115,11 +115,11 @@ export async function loadSnipoConfig(cwd: string = process.cwd()): Promise<Load
   }
 
   const configDir = dirname(configPath);
-  let config: SnipoConfig;
+  let config: GenConfig;
 
   try {
-    const loaded = await loadConfig<SnipoConfig>({
-      name: 'snipo',
+    const loaded = await loadConfig<GenConfig>({
+      name: 'gen',
       cwd: configDir,
       configFile: CONFIG_BASENAME,
       rcFile: false,
@@ -131,7 +131,7 @@ export async function loadSnipoConfig(cwd: string = process.cwd()): Promise<Load
     config = loaded.config;
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
-    throw new Error(`Failed to load snipo configuration at ${configPath}: ${message}`);
+    throw new Error(`Failed to load gen configuration at ${configPath}: ${message}`);
   }
 
   if (!config || !Array.isArray(config.generators)) {
@@ -141,7 +141,7 @@ export async function loadSnipoConfig(cwd: string = process.cwd()): Promise<Load
   const invalidEntry = config.generators.find((entry) => typeof entry !== 'string');
   if (invalidEntry !== undefined) {
     throw new Error(
-      `Invalid snipo configuration at ${configPath}: "generators" must be an array of glob patterns (strings), but it contains a ${typeof invalidEntry}. Move each inline generator into its own file and reference it with a glob.`,
+      `Invalid gen configuration at ${configPath}: "generators" must be an array of glob patterns (strings), but it contains a ${typeof invalidEntry}. Move each inline generator into its own file and reference it with a glob.`,
     );
   }
 

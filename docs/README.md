@@ -1,6 +1,6 @@
-# Snipo documentation
+# Gen documentation
 
-Snipo is a toolkit for snippet-based code generation. You define a generator
+Gen is a toolkit for snippet-based code generation. You define a generator
 once: its inputs, the files it writes, and the source files it edits. Then you
 run it from a terminal, from automation, or from another Node program with the
 same inputs.

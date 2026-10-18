@@ -1,6 +1,6 @@
 # Programmatic API
 
-The `snipo` CLI is a thin shell over a library. The same functions that drive
+The `gen` CLI is a thin shell over a library. The same functions that drive
 the binary run from any Node program, so a project-initialization tool or a
 branded wrapper can load a configuration, pick a generator, collect answers, and
 write files without spawning a subprocess.
@@ -8,28 +8,28 @@ write files without spawning a subprocess.
 The package splits that surface by cost. Each entry point pulls in only what it
 needs.
 
-| Specifier       | What it gives you                                                | What it loads                 |
-| --------------- | ---------------------------------------------------------------- | ----------------------------- |
-| `snipo`         | The declaration helpers and every public type                    | No runtime engines            |
-| `snipo/runtime` | The functions that load, resolve, prompt, run, render, and stage | No interactive-prompt library |
-| `snipo/cli`     | The `snipo` binary                                               | `@clack/prompts`              |
+| Specifier           | What it gives you                                                | What it loads                 |
+| ------------------- | ---------------------------------------------------------------- | ----------------------------- |
+| `@trut/gen`         | The declaration helpers and every public type                    | No runtime engines            |
+| `@trut/gen/runtime` | The functions that load, resolve, prompt, run, render, and stage | No interactive-prompt library |
+| `@trut/gen/cli`     | The `gen` binary                                                 | `@clack/prompts`              |
 
-`snipo/cli` is the executable entry. It exports nothing, so import it only to
+`@trut/gen/cli` is the executable entry. It exports nothing, so import it only to
 run the CLI.
 
-A project that only declares generators imports `snipo` and stops there. The
+A project that only declares generators imports `@trut/gen` and stops there. The
 root re-exports the prompt and action constructors plus the shared types, and it
 imports no configuration loader, template engine, or source editor. The runtime
 entry carries those engines and never imports the Clack adapter.
 
 ## Types at the root
 
-`snipo` is the single source of truth for types. Import them from the root
-rather than from `snipo/runtime`, so a declaration-only file never reaches the
+`@trut/gen` is the single source of truth for types. Import them from the root
+rather than from `@trut/gen/runtime`, so a declaration-only file never reaches the
 engine.
 
-- **Declaration**: `Generator`, `SnipoConfig`.
-- **Actions**: `Action`, `BuiltinAction`, `SnipoActions`, `AddTemplatesAction`,
+- **Declaration**: `Generator`, `GenConfig`.
+- **Actions**: `Action`, `BuiltinAction`, `GenActions`, `AddTemplatesAction`,
   `UpdateImportsAction`, `UpdateExportsAction`, and their option types.
 - **Handlers**: `ActionHandlerFor`, `ActionHandlerRegistry`.
 - **Prompts**: `AnyPrompt`, `BuiltinPrompt`, `PromptAnswers`, `PromptChoice`,
@@ -43,7 +43,7 @@ engine.
   annotate a run context or a hook registry without importing those packages
   yourself.
 
-`SnipoActions` is the augmentation target for custom actions. It is empty by
+`GenActions` is the augmentation target for custom actions. It is empty by
 default and declared in `src/actions/types.ts`.
 
 ## Running a generator from code
@@ -54,8 +54,8 @@ the answers to use. It runs the actions, commits the staged writes, and returns
 the written file list.
 
 ```ts
-import { addTemplates, defineGenerator } from 'snipo';
-import { runGenerator } from 'snipo/runtime';
+import { addTemplates, defineGenerator } from '@trut/gen';
+import { runGenerator } from '@trut/gen/runtime';
 
 const generator = defineGenerator({
   name: 'component',
@@ -74,7 +74,7 @@ result.files; // absolute paths that were written
 result.written; // false when dryRun was set
 ```
 
-No `snipo.config.*` file is required. When `configDir` and `moduleDir` point at
+No `gen.config.*` file is required. When `configDir` and `moduleDir` point at
 the same directory, the generator behaves as if it lived next to the
 configuration. Pass `dryRun: true` to stage everything and return the planned
 paths without touching disk. Pass `force: true` to overwrite existing files.
@@ -85,11 +85,11 @@ When a tool needs to read a project's configuration instead of receiving the
 generator directly, the runtime exposes each phase as its own function.
 
 ```ts
-import type { PromptAdapter } from 'snipo';
-import { loadSnipoConfig, resolveGenerator, resolvePrompts, runGenerator } from 'snipo/runtime';
+import type { PromptAdapter } from '@trut/gen';
+import { loadGenConfig, resolveGenerator, resolvePrompts, runGenerator } from '@trut/gen/runtime';
 
 const adapter: PromptAdapter = createMyAdapter();
-const loaded = await loadSnipoConfig(process.cwd());
+const loaded = await loadGenConfig(process.cwd());
 
 const resolved = await resolveGenerator({
   generators: loaded.generators,
@@ -111,7 +111,7 @@ await runGenerator({
 });
 ```
 
-- `loadSnipoConfig(cwd)` finds the nearest `snipo.config.*`, loads it, and
+- `loadGenConfig(cwd)` finds the nearest `gen.config.*`, loads it, and
   discovers its generator modules. It returns the raw `config`, the resolved
   `generators`, and the `configPath`, `configDir`, and `boundary` it used. A
   missing configuration names the starting directory and the boundary; a
@@ -135,7 +135,7 @@ Anything that resolves prompt answers goes through a `PromptAdapter`. The
 interactive CLI uses the Clack adapter; a non-interactive tool supplies its own.
 
 ```ts
-import type { PromptAdapter } from 'snipo';
+import type { PromptAdapter } from '@trut/gen';
 
 const adapter: PromptAdapter = {
   interactive: false,
@@ -190,17 +190,17 @@ not leak between runs.
 
 ## Extending the action set
 
-A wrapper can add action types of its own. Augment `SnipoActions` with the new
+A wrapper can add action types of its own. Augment `GenActions` with the new
 shape, then register a handler for its `type`. The handler receives the same
 `RunContext` as the built-in handlers.
 
 ```ts
 import { join } from 'node:path';
-import { addTemplates, defineGenerator, type ActionHandlerRegistry } from 'snipo';
-import { runGenerator, stageFile } from 'snipo/runtime';
+import { addTemplates, defineGenerator, type ActionHandlerRegistry } from '@trut/gen';
+import { runGenerator, stageFile } from '@trut/gen/runtime';
 
-declare module 'snipo' {
-  interface SnipoActions {
+declare module '@trut/gen' {
+  interface GenActions {
     'acme/manifest': { readonly type: 'acme/manifest'; value: string };
   }
 }
@@ -241,7 +241,7 @@ Augmentation is global per program, so namespace your action keys
 ## Primitives for custom handlers
 
 A custom handler builds output from the same primitives the built-in handlers use.
-All are exported from `snipo/runtime`.
+All are exported from `@trut/gen/runtime`.
 
 **Staging.** `stageFile(context, absolutePath, contents)` stages a generated file
 and refuses to overwrite an existing one unless the run was forced. It treats two
@@ -286,7 +286,7 @@ the same mapping.
 - `src/runtime/render.ts`, `src/runtime/source-update.ts`: rendering and the AST
   editors.
 - `src/runtime/handlers/`: the built-in action handlers.
-- `src/actions/types.ts`: the open `Action` union and `SnipoActions`.
+- `src/actions/types.ts`: the open `Action` union and `GenActions`.
 
 See [Architecture and how it works](./architecture.md) for how these pieces fit
 together at runtime.

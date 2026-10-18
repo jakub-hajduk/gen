@@ -1,7 +1,7 @@
 # For AI agents
 
-This page tells an agent how to use Snipo to generate code from boilerplate,
-how to build new generators, and how to work inside the Snipo repository. Read
+This page tells an agent how to use Gen to generate code from boilerplate,
+how to build new generators, and how to work inside the Gen repository. Read
 [Generators and actions](./generators-and-actions.md) for the full option
 reference; this page is the operating procedure.
 
@@ -14,20 +14,20 @@ Follow these rules first. They prevent a run from hanging or overwriting files.
 2. Run with `--dry-run` before the real run and check the file list.
 3. Do not pass `--force` unless the user asked to replace existing files. Without
    it, a collision fails the run safely.
-4. Run from inside the project. Snipo finds the nearest `snipo.config.*` by
+4. Run from inside the project. Gen finds the nearest `gen.config.*` by
    walking up, so run from the project root or a subdirectory of it.
 
 The command shape is:
 
 ```sh
-snipo <generator> [--prompt-flags] [--dry-run] [--force]
+gen <generator> [--prompt-flags] [--dry-run] [--force]
 ```
 
-Use `pnpm snipo ...` or `npx snipo ...` when the binary is not global.
+Use `pnpm gen ...` or `npx gen ...` when the binary is not global.
 
 ## Step 1: Find the generators and their inputs
 
-Read `snipo.config.*` for the `generators` glob patterns, then read the matched
+Read `gen.config.*` for the `generators` glob patterns, then read the matched
 `*.generator.ts` modules. Each module's `defineGenerator` call gives you
 everything you need:
 
@@ -39,7 +39,7 @@ If you cannot read the files, run the binary with no generator name in a
 non-interactive shell. It fails and lists the available names.
 
 ```sh
-snipo
+gen
 # Error: ... Available generators: component, service, ...
 ```
 
@@ -48,7 +48,7 @@ snipo
 Build the flag list from the generator's `prompts`, then dry-run.
 
 ```sh
-snipo component --name "User Profile" --dry-run
+gen component --name "User Profile" --dry-run
 ```
 
 The dry run prints every path it would write and changes nothing:
@@ -83,11 +83,11 @@ templates.
 
 ### 3a. Confirm the config glob
 
-`snipo.config.ts` points at your generator files. If the pattern already covers
+`gen.config.ts` points at your generator files. If the pattern already covers
 the new file, change nothing.
 
 ```ts
-import { defineConfig } from 'snipo';
+import { defineConfig } from '@trut/gen';
 
 export default defineConfig({
   generators: ['./generators/*.generator.ts'],
@@ -100,7 +100,7 @@ Put it at a path the glob matches, for example
 `generators/service.generator.ts`.
 
 ```ts
-import { addTemplates, defineGenerator, select, text, updateExports } from 'snipo';
+import { addTemplates, defineGenerator, select, text, updateExports } from '@trut/gen';
 
 export default defineGenerator({
   name: 'service',
@@ -154,8 +154,8 @@ target file before the first run.
 ### 3d. Verify the new generator
 
 ```sh
-snipo service --name "Billing" --transport http --dry-run
-snipo service --name "Billing" --transport http
+gen service --name "Billing" --transport http --dry-run
+gen service --name "Billing" --transport http
 ```
 
 ## Template syntax
@@ -188,8 +188,8 @@ When spawning a process is awkward, import the runtime and pass answers directly
 No config file and no TTY are required.
 
 ```ts
-import { addTemplates, defineGenerator } from 'snipo';
-import { runGenerator } from 'snipo/runtime';
+import { addTemplates, defineGenerator } from '@trut/gen';
+import { runGenerator } from '@trut/gen/runtime';
 
 const generator = defineGenerator({
   name: 'component',
@@ -225,9 +225,9 @@ load generators from a project instead of defining them in code.
 - **Idempotent source edits.** Re-adding an existing import or export member is a
   no-op.
 
-## Working on Snipo itself
+## Working on Gen itself
 
-When the task is to change the Snipo package, not to use it, run these from the
+When the task is to change the Gen package, not to use it, run these from the
 repository root:
 
 ```sh
@@ -240,7 +240,7 @@ pnpm fix         # oxlint --fix + oxfmt --write
 ```
 
 Before finishing a change, run `pnpm check` and `pnpm test`. Keep the public entry
-points (`snipo`, `snipo/runtime`, `snipo/cli`) coherent with the specs in
+points (`@trut/gen`, `@trut/gen/runtime`, `@trut/gen/cli`) coherent with the specs in
 `openspec/specs/`.
 
 ## Checklist
@@ -249,4 +249,4 @@ points (`snipo`, `snipo/runtime`, `snipo/cli`) coherent with the specs in
 2. Supply every prompt as a flag.
 3. Dry-run and confirm the file list.
 4. Run for real; use `--force` only when the user asked to replace files.
-5. After a code change to Snipo, run `pnpm check` and `pnpm test`.
+5. After a code change to Gen, run `pnpm check` and `pnpm test`.

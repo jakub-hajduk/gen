@@ -12,7 +12,7 @@ import { stageFile } from '../../src/runtime/stage';
 import { makeTempDir, writeFile } from '../helpers/fixtures';
 
 declare module '../../src/actions/types' {
-  interface SnipoActions {
+  interface GenActions {
     'test/manifest': { readonly type: 'test/manifest'; value: string };
   }
 }

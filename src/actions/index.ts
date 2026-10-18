@@ -4,7 +4,7 @@ export type {
   Action,
   AddTemplatesAction,
   BuiltinAction,
-  SnipoActions,
+  GenActions,
   UpdateExportsAction,
   UpdateImportsAction,
 } from './types';

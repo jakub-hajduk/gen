@@ -1,7 +1,7 @@
-export interface SnipoConfig {
+export interface GenConfig {
   generators: string[];
 }
 
-export function defineConfig<TConfig extends SnipoConfig>(config: TConfig): TConfig {
+export function defineConfig<TConfig extends GenConfig>(config: TConfig): TConfig {
   return config;
 }

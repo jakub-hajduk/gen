@@ -27,12 +27,9 @@ function writeGenerator(dir: string, name: string): void {
 }
 
 function makeProject(): string {
-  const dir = realpathSync(mkdtempSync(join(tmpdir(), 'snipo-fixture-')));
+  const dir = realpathSync(mkdtempSync(join(tmpdir(), 'gen-fixture-')));
   writeFile(join(dir, 'package.json'), JSON.stringify({ name: 'fixture', version: '0.0.0' }));
-  writeFile(
-    join(dir, 'snipo.config.ts'),
-    "export default { generators: ['./generators/*.ts'] };\n",
-  );
+  writeFile(join(dir, 'gen.config.ts'), "export default { generators: ['./generators/*.ts'] };\n");
   writeGenerator(dir, 'alpha');
   writeGenerator(dir, 'beta');
   return dir;

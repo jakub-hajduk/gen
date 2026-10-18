@@ -6,7 +6,7 @@ import type { ActionHandlerRegistry } from '../src/runtime/actions';
 import { stageFile } from '../src/runtime/stage';
 
 declare module '../src/actions/types' {
-  interface SnipoActions {
+  interface GenActions {
     'test/augmented': { readonly type: 'test/augmented'; value: string };
   }
 }

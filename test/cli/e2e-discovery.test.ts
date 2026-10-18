@@ -23,10 +23,10 @@ function write(path: string, contents: string): void {
 }
 
 function buildPluginProject(): string {
-  const dir = realpathSync(mkdtempSync(join(tmpdir(), 'snipo-e2e-discovery-')));
+  const dir = realpathSync(mkdtempSync(join(tmpdir(), 'gen-e2e-discovery-')));
   write(join(dir, 'package.json'), JSON.stringify({ name: 'fixture', version: '0.0.0' }));
   write(
-    join(dir, 'snipo.config.ts'),
+    join(dir, 'gen.config.ts'),
     "export default { generators: ['./generators/*.generator.ts'] };\n",
   );
 

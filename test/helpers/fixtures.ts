@@ -3,9 +3,9 @@ import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 
 export function makeProject(configContents: string): string {
-  const dir = mkdtempSync(join(tmpdir(), 'snipo-fixture-'));
+  const dir = mkdtempSync(join(tmpdir(), 'gen-fixture-'));
   writeFileSync(join(dir, 'package.json'), JSON.stringify({ name: 'fixture', version: '0.0.0' }));
-  writeFileSync(join(dir, 'snipo.config.ts'), configContents);
+  writeFileSync(join(dir, 'gen.config.ts'), configContents);
   return dir;
 }
 
@@ -14,6 +14,6 @@ export function writeFile(path: string, contents: string): void {
   writeFileSync(path, contents);
 }
 
-export function makeTempDir(prefix = 'snipo-'): string {
+export function makeTempDir(prefix = 'gen-'): string {
   return mkdtempSync(join(tmpdir(), prefix));
 }

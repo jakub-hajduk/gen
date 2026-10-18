@@ -1,5 +1,5 @@
 {
-  "name": "snipo",
+  "name": "@trut/gen",
   "version": "0.0.0",
   "description": "A modular toolkit for snippet-based code generation. Build and customize your own scaffolding system.",
   "keywords": [
@@ -16,10 +16,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/jakub-hajduk/snipo"
+    "url": "https://github.com/jakub-hajduk/gen"
   },
   "bin": {
-    "snipo": "./dist/cli.mjs"
+    "gen": "./dist/cli.mjs"
   },
   "files": [
     "dist"
