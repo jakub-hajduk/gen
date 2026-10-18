@@ -18,6 +18,9 @@
     "type": "git",
     "url": "https://github.com/jakub-hajduk/gen"
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "bin": {
     "gen": "./dist/cli.mjs"
   },
