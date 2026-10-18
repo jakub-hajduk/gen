@@ -1,6 +1,6 @@
 {
   "name": "@trut/gen",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "A modular toolkit for snippet-based code generation. Build and customize your own scaffolding system.",
   "keywords": [
     "automation",
