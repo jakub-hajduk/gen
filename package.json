@@ -1,6 +1,6 @@
 {
   "name": "snipo",
-  "version": "0.0.2",
+  "version": "0.0.0",
   "description": "A modular toolkit for snippet-based code generation. Build and customize your own scaffolding system.",
   "keywords": [
     "automation",
@@ -40,15 +40,12 @@
     }
   },
   "scripts": {
-    "dev": "tsdown --watch",
     "build": "tsdown",
-    "typecheck": "tsc --noEmit",
+    "dev": "tsdown --watch",
     "test": "node --import tsx --test",
-    "lint": "oxlint",
-    "format": "oxfmt",
-    "check": "oxlint && oxfmt --check && tsc --noEmit",
+    "check": "tsc --noEmit && oxlint && oxfmt --check",
     "fix": "oxlint --fix && oxfmt --write",
-    "release": "sure && pnpm run build && changelogen --release --push --publish"
+    "release": "sure && pnpm run build && release-it"
   },
   "dependencies": {
     "@clack/prompts": "^1.8.1",
@@ -63,11 +60,11 @@
   },
   "devDependencies": {
     "@types/node": "^22.13.4",
-    "changelogen": "^0.6.2",
     "oxfmt": "^0.73.0",
     "oxlint": "^1.88.0",
     "sure": "^0.0.3",
     "tsdown": "^0.23.1",
-    "tsx": "^4.19.2"
+    "tsx": "^4.19.2",
+    "release-it": "^21.1.1"
   }
 }
