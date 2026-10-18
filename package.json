@@ -1,6 +1,6 @@
 {
   "name": "snipo",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A modular toolkit for snippet-based code generation. Build and customize your own scaffolding system.",
   "keywords": [
     "automation",
